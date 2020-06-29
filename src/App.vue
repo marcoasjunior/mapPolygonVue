@@ -68,6 +68,34 @@
 
       </v-card>
 
+       <v-card max-width="600" class="mx-auto mt-5">
+
+        <v-card-title>
+
+          <p class="body-1">Mapa:</p>
+
+          <GmapMap
+          :center="center"
+          :zoom="10"
+          map-type-id="terrain"
+          style="width: 500px; height: 300px"
+        >
+          <GmapMarker
+            :key="index"
+            v-for="(m, index) in markers"
+            :position="m.position"
+            :clickable="true"
+            :draggable="true"
+            @click="center=m.position"
+          />
+        </GmapMap>
+
+        </v-card-title>
+
+       </v-card>
+
+
+
     </v-main>
 
   </v-app>
@@ -83,7 +111,9 @@ export default {
   data: () => ({
 
     address: null,
-    areas: []
+    areas: [],
+    center: {lat:-27.5800711, lng:-48.5827555},
+    markers: [],
 
   }),
 
@@ -95,7 +125,25 @@ export default {
 
       const demand = await this.$axios.get(`http://localhost:3333/demand/${this.address}`).catch(() => alert('Erro ao procurar área, endereço não encontrado.'))
 
+      this.center = {
+        
+        lat: demand.data.point[0].latitude,
+        lng: demand.data.point[0].longitude,
+
+        }
+
+      this.markers.push({
+
+        position: {
+        
+        lat: demand.data.point[0].latitude,
+        lng: demand.data.point[0].longitude,
+
+        }
+      })
+
       this.areas = demand.data.areas
+
     }
 
   },
