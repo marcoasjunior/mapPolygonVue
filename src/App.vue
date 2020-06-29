@@ -4,7 +4,7 @@
       Desafio DevOZ
     </v-app-bar>
 
-    <v-content>
+    <v-main>
 
       <v-card max-width="600" class="mx-auto mt-5">
 
@@ -38,6 +38,8 @@
 
         <v-card-text>
 
+          <p v-if="areas.length === 0 "> Sem dados</p>
+
           <v-list>
 
             <v-list-item-group color="primary">
@@ -66,7 +68,7 @@
 
       </v-card>
 
-    </v-content>
+    </v-main>
 
   </v-app>
 
@@ -91,9 +93,7 @@ export default {
 
       if (!this.address) return alert('Preencha o endereço.')
 
-      const demand = await this.$axios.get(`http://localhost:3333/demand/${this.address}`)
-
-      if (!demand.data) alert('Erro ao procurar áreas.')
+      const demand = await this.$axios.get(`http://localhost:3333/demand/${this.address}`).catch(() => alert('Erro ao procurar área, endereço não encontrado.'))
 
       this.areas = demand.data.areas
     }
